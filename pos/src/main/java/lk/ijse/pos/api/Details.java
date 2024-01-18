@@ -52,4 +52,17 @@ public class Details extends HttpServlet {
             jsonb.toJson(dtoList,resp.getWriter());
         }
     }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        logger.info("Start Details Servlet doDelete method.");
+        String order_id = req.getParameter("order_id");
+
+        if (order_id == null || order_id.isEmpty()) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing or empty 'order_id' parameter");
+        } else {
+            var dbProcess = new DBProcess();
+            dbProcess.deleteOrderDetails(order_id, connection);
+        }
+    }
 }
