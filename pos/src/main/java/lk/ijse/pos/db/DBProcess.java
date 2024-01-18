@@ -508,7 +508,6 @@ public class DBProcess {
 
     public List<OrderdetailsDTO> getAllOrderDetails(String order_id, Connection connection) {
         logger.info("Start getAllOrderDetails method.");
-        System.out.println("order_id : "+order_id);
         try {
             var ps = connection.prepareStatement(GET_ALL_ORDERDETAILS_DATA);
             ps.setString(1, order_id);
