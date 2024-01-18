@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>POS System-A$</title>
+    <link rel="icon" href="./assets/favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="./assets/css/normalize.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./assets/css/fontawesome/css/all.min.css">
+    <link href="./assets/css/hover_master/css/hover-min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-minimal@4/minimal.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <meta name="keyword" content="pos system, pos, system, web, web system,
+        web pos system, software, online,bootstrap, java, html, javascript, js, css">
+    <meta name="description" content="Web POS System">
+    <meta name="author" content="Amidu Shamika">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<!--Header-->
+<header>
+    <nav class="navbar fixed-top navbar-expand-lg bg-primary ">
+        <div class="container-fluid">
+            <a id="brand" class="navbar-brand hvr-pulse-grow">POS System</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav" id="nn">
+                    <li class="nav-item">
+                        <a class="nav-link hvr-pulse" id="home_nav">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link hvr-pulse" id="customer_nav">Customer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link hvr-pulse" id="item_nav">Item</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link hvr-pulse" id="order_nav">Order</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<!--Home Page-->
+<section id="home_section">
+    <section id="home_main_section">
+        <section id="welcome_section">
+            <div class="card text-center" id="home">
+                <div class="card-body">
+                    <h1 class="card-title" id="welcome">Welcome to A$ POS System</h1>
+                    <img class="hvr-pulse-shrink" id="homeImg" src="./assets/images/welcome-img1.png" alt="home img" data-aos="zoom-in" data-aos-duration="2000">
+                    <p id="intro" class="card-text" data-aos="zoom-in" data-aos-duration="2000">Simplifying Sales and Streamlining Business
+                        Your all-in-one solution for smooth transactions.
+                        Effortlessly manage inventory, track sales, and delight customers with our intuitive POS system.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section id="home_button_section">
+            <div class="container" id="home_btns">
+                <div class="row">
+                    <div class="btnCard col col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 hvr-wobble-top" data-aos="zoom-in-right" data-aos-duration="2000">
+                        <div class="tech-card">
+                            <img src="./assets/images/customer-img.png" class="card-img-top" alt="customer-img">
+                            <button class="btn btn-primary"><a class="nav-link" id="customer_nav_btn">CUSTOMER</a></button>
+                        </div>
+                    </div>
+                    <div class="btnCard col col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 hvr-wobble-bottom" data-aos="zoom-in-down" data-aos-duration="2000">
+                        <div class="tech-card">
+                            <img src="./assets/images/item-img.png" class="card-img-top" alt="item-img">
+                            <button class="btn btn-primary"><a class="nav-link" id="item_nav_btn">ITEM</a></button>
+                        </div>
+                    </div>
+                    <div class="btnCard col col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 hvr-wobble-top" data-aos="zoom-in-left" data-aos-duration="2000">
+                        <div class="tech-card">
+                            <img src="./assets/images/order-img.png" class="card-img-top" alt="order-img">
+                            <button class="btn btn-primary"><a class="nav-link" id="order_nav_btn">ORDER</a></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+</section>
+<!--Customer Page-->
+<section id="customer_main_section">
+    <h1><i class="fa-solid fa-user-group fa-fade" style="color: #1C77FD;"></i> Customer Manage</h1>
+    <br>
+    <section id="customer_search_section">
+        <div class="col-md-12 mx-auto">
+            <input type="text" class="form-control" id="customer_search_box" placeholder="Search with id, name or address..">
+            <div class="col col-xxl-11 col-xl-11 col-lg-11 col-md-11 col-sm-11 col-11 mx-auto">
+                <table class="table table-info table-sm table-hover table-borderless">
+                    <tbody id="customer_search_tbl_body"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    <br>
+    <section id="customer_form_section">
+        <form class="row g-3">
+            <div class="col-md-6">
+                <label for="customer_id" class="form-label">Customer ID</label>
+                <input type="text" class="form-control" id="customer_id" placeholder="C-000X">
+            </div>
+            <div class="col-md-6">
+                <label for="customer_name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="customer_name">
+            </div>
+            <div class="col-md-6">
+                <label for="customer_address" class="form-label">Address</label>
+                <input type="text" class="form-control" id="customer_address">
+            </div>
+            <div class="col-md-6">
+                <label for="customer_salary" class="form-label">Salary</label>
+                <input type="number" class="form-control" id="customer_salary">
+            </div>
+            <div id="customer_btns" class="mt-3 mb-4">
+                <button type="button" class="btn btn-success hvr-bob">Save</button>
+                <button type="button" class="btn btn-primary hvr-bob">Update</button>
+                <button type="button" class="btn btn-danger hvr-bob">Delete</button>
+                <button type="button" class="btn btn-warning hvr-shrink">
+                    <i class="fa-solid fa-arrows-rotate fa-spin" style="color: #000000;"></i>
+                </button>
+            </div>
+        </form>
+    </section>
+    <section id="customer_table_section">
+        <div class="col col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <table class="table table-info table-sm table-hover table-borderless">
+                <thead>
+                <tr>
+                    <th scope="col">Customer ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Salary</th>
+                </tr>
+                </thead>
+                <tbody id="customer_tbl_body">
+                <tr>
+                    <td>C-0001</td>
+                    <td>Sunil Perera</td>
+                    <td>Matugama</td>
+                    <td>60000.00</td>
+                </tr>
+                <tr>
+                    <td>C-0002</td>
+                    <td>Kasun Rajitha</td>
+                    <td>Agalawatta</td>
+                    <td>75000.00</td>
+                </tr>
+                <tr>
+                    <td>C-0003</td>
+                    <td>Kusal Mendis</td>
+                    <td>Kalutara</td>
+                    <td>80000.00</td>
+                </tr>
+                <tr>
+                    <td>C-0004</td>
+                    <td>Amali Wasana</td>
+                    <td>Colombo</td>
+                    <td>50000.00</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</section>
+<!--Item Page-->
+<section id="item_main_section">
+    <h1><i class="fa-solid fa-store fa-flip" style="color: #1C77FD;"></i> Store Manage</h1>
+    <br>
+    <section id="item_search_section">
+        <div class="col-md-12 mx-auto">
+            <input type="text" class="form-control" id="item_search_box" placeholder="Search with code or description..">
+            <div class="col col-xxl-11 col-xl-11 col-lg-11 col-md-11 col-sm-11 col-11 mx-auto">
+                <table class="table table-info table-sm table-hover table-borderless">
+                    <tbody id="item_search_tbl_body"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    <br>
+    <section id="item_form_section">
+        <form class="row g-3">
+            <div class="col-md-6">
+                <label for="item_code" class="form-label">Item Code</label>
+                <input type="text" class="form-control" id="item_code" placeholder="I-000X">
+            </div>
+            <div class="col-md-6">
+                <label for="description" class="form-label">Description</label>
+                <input type="text" class="form-control" id="description">
+            </div>
+            <div class="col-md-6">
+                <label for="unit_price" class="form-label">Unit Price</label>
+                <input type="number" class="form-control" id="unit_price">
+            </div>
+            <div class="col-md-6">
+                <label for="item_qty" class="form-label">Qty on hand</label>
+                <input type="number" class="form-control" id="item_qty">
+            </div>
+            <div id="item_btns" class="mt-3 mb-4">
+                <button type="button" class="btn btn-success hvr-bob">Save</button>
+                <button type="button" class="btn btn-primary hvr-bob">Update</button>
+                <button type="button" class="btn btn-danger hvr-bob">Delete</button>
+                <button type="button" class="btn btn-warning hvr-shrink">
+                    <i class="fa-solid fa-arrows-rotate fa-spin" style="color: #000000;"></i>
+                </button>
+            </div>
+        </form>
+    </section>
+    <section id="item_table_section">
+        <div class="col col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <table class="table table-info table-sm table-hover table-borderless">
+                <thead>
+                <tr>
+                    <th scope="col">Item Code</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Unit Price</th>
+                    <th scope="col">Qty on hand</th>
+                </tr>
+                </thead>
+                <tbody id="item_tbl_body">
+                <tr>
+                    <td>I-0001</td>
+                    <td>Zesta Tea</td>
+                    <td>160.00</td>
+                    <td>55</td>
+                </tr>
+                <tr>
+                    <td>I-0002</td>
+                    <td>LUX soap</td>
+                    <td>180.00</td>
+                    <td>75</td>
+                </tr>
+                <tr>
+                    <td>I-0003</td>
+                    <td>Samba Rice</td>
+                    <td>230.00</td>
+                    <td>800</td>
+                </tr>
+                <tr>
+                    <td>I-0004</td>
+                    <td>Mari Biscuit</td>
+                    <td>120.00</td>
+                    <td>40</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</section>
+<!--Order Page-->
+<section id="order_main_section">
+    <h1><i class="fa-solid fa-cart-shopping fa-bounce" style="color: #1C77FD;"></i> Order Manage</h1>
+    <br>
+    <section id="order_search_section">
+        <div class="col-md-12 mx-auto">
+            <input type="text" class="form-control" id="order_search_box" placeholder="Search with order/customer id..">
+            <div class="col col-xxl-11 col-xl-11 col-lg-11 col-md-11 col-sm-11 col-11 mx-auto">
+                <table class="table table-info table-sm table-hover table-borderless">
+                    <tbody id="order_search_tbl_body"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    <br>
+    <section id="order_form_set" class="row g-3">
+        <section id="form1">
+            <h3>Invoice</h3>
+            <form class="row g-3">
+                <div class="col col-xxl-12 col-xl-12 col-lg-12 col-md-6 col-sm-12 col-12">
+                    <label for="order_id" class="form-label">Order ID</label>
+                    <input type="text" class="form-control" id="order_id">
+                </div>
+                <div class="col col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <label for="date" class="form-label">Date</label>
+                    <input type="text" class="form-control" id="date" readonly>
+                </div>
+                <div class="col col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <label for="customer_select" class="form-label">Customer</label>
+                    <select id="customer_select" class="form-select">
+                        <option>-Set Customer-</option>
+                        <option>C-0001</option>
+                        <option>C-0002</option>
+                        <option>C-0003</option>
+                    </select>
+                </div>
+                <div class="col col-xxl-12 col-xl-12 col-lg-12 col-md-6 col-sm-12 col-12">
+                    <label for="order_customer_name" class="form-label">Customer Name</label>
+                    <input type="text" class="form-control" id="order_customer_name" readonly>
+                </div>
+                <div class="col col-xxl-12 col-xl-12 col-lg-12 col-md-6 col-sm-12 col-12">
+                    <label for="order_total" class="form-label">Total</label>
+                    <input type="number" class="form-control" id="order_total" readonly>
+                </div>
+                <div id="order_btns" class="mt-3 mb-4">
+                    <button type="button" class="btn btn-primary">Update</button>
+                    <button type="button" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-warning">
+                        <i class="fa-solid fa-arrows-rotate fa-spin" style="color: #000000;"></i>
+                    </button>
+                </div>
+            </form>
+        </section>
+        <section id="form2">
+            <h3>Cart</h3>
+            <form class="row g-3">
+                <div class="col col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <label for="item_select" class="form-label">Items</label>
+                    <select id="item_select" class="form-select">
+                        <option>-Select Item-</option>
+                        <option>I-0001</option>
+                        <option>I-0002</option>
+                        <option>I-0003</option>
+                    </select>
+                </div>
+                <div class="col col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <label for="order_item_code" class="form-label">Item Code</label>
+                    <input type="text" class="form-control" id="order_item_code" readonly>
+                </div>
+                <div class="col col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <label for="order_item_description" class="form-label">Description</label>
+                    <input type="text" class="form-control" id="order_item_description" readonly>
+                </div>
+                <div class="col col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <label for="order_item_unit_price" class="form-label">Unit Price</label>
+                    <input type="number" class="form-control" id="order_item_unit_price" readonly>
+                </div>
+                <div class="col col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <label for="total_item_qty" class="form-label">Qty on hand</label>
+                    <input type="number" class="form-control" id="total_item_qty" readonly>
+                </div>
+                <div class="col col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <label for="order_get_item_qty" class="form-label">Qty</label>
+                    <input type="number" class="form-control" id="order_get_item_qty">
+                </div>
+                <div id="cart_btns" class="mt-3 mb-4">
+                    <button type="button" class="btn btn-success">Add</button>
+                    <button type="button" class="btn btn-danger">Remove</button>
+                    <button type="reset" class="btn btn-warning">
+                        <i class="fa-solid fa-arrows-rotate fa-spin" style="color: #000000;"></i>
+                    </button>
+                </div>
+            </form>
+        </section>
+        <section id="form3">
+            <h4 id="total">Total : Rs. 0.00</h4>
+            <h5 id="subTotal">SubTotal : Rs. 0.00</h5>
+            <form class="row g-3">
+                <div class="col col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <label for="cash" class="form-label">Cash</label>
+                    <input type="number" class="form-control" id="cash">
+                </div>
+                <div class="col col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <label for="discount" class="form-label">Discount</label>
+                    <input type="number" class="form-control" id="discount">
+                </div>
+                <div class="col col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <label for="balance" class="form-label">Balance</label>
+                    <input type="number" class="form-control" id="balance" readonly>
+                </div>
+                <div class="mt-3 mb-4">
+                    <button id="btn_place_order" type="button" class="btn btn-success">Place Order</button>
+                </div>
+            </form>
+        </section>
+    </section>
+    <section id="table_section1">
+        <h4>Order Items Table</h4>
+        <div class="col col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <table class="table table-info table-sm table-hover table-borderless">
+                <thead>
+                <tr>
+                    <th scope="col">Item Code</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Unit Price</th>
+                    <th scope="col">Qty</th>
+                    <th scope="col">Total</th>
+                </tr>
+                </thead>
+                <tbody id="order_item_tbl_body">
+                <tr>
+                    <td>I-0001</td>
+                    <td>Zesta Tea</td>
+                    <td>160.00</td>
+                    <td>2</td>
+                    <td>320.00</td>
+                </tr>
+                <tr>
+                    <td>I-0002</td>
+                    <td>LUX soap</td>
+                    <td>180.00</td>
+                    <td>5</td>
+                    <td>900.00</td>
+                </tr>
+                <tr>
+                    <td>I-0003</td>
+                    <td>Samba Rice</td>
+                    <td>230.00</td>
+                    <td>2</td>
+                    <td>460.00</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <section id="table_section2">
+        <h4>Order Table</h4>
+        <div class="col col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <table class="table table-info table-sm table-hover table-borderless">
+                <thead>
+                <tr>
+                    <th scope="col">Order ID</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Customer ID</th>
+                    <th scope="col">Discount %</th>
+                    <th scope="col">Total</th>
+                </tr>
+                </thead>
+                <tbody id="order_tbl_body">
+                <tr>
+                    <td>O-0001</td>
+                    <td>2023-10-01</td>
+                    <td>C-0001</td>
+                    <td>15</td>
+                    <td>1800.00</td>
+                </tr>
+                <tr>
+                    <td>O-0002</td>
+                    <td>2023-10-03</td>
+                    <td>C-0003</td>
+                    <td>8</td>
+                    <td>270.00</td>
+                </tr>
+                <tr>
+                    <td>O-0003</td>
+                    <td>2023-10-04</td>
+                    <td>C-0002</td>
+                    <td>12</td>
+                    <td>6800.00</td>
+                </tr>
+                <tr>
+                    <td>O-0004</td>
+                    <td>2023-10-05</td>
+                    <td>C-0001</td>
+                    <td>10</td>
+                    <td>400.00</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</section>
+<footer class="navbar bg-primary bg-gradient">
+    <p>©Copyright - All Right Reserved Designed by Amidu Shamika</p>
+</footer>
+<script src="./assets/js/jquery.min.js"></script>
+<script src="./assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="module" src="./db/DB.js"></script>
+<script type="module" src="./controller/CustomerController.js"></script>
+<script type="module" src="./controller/ItemController.js"></script>
+<script type="module" src="./controller/OrderController.js"></script>
+<script src="./assets/js/navigation.js"></script>
+</body>
+</html>
