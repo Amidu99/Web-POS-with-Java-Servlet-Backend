@@ -10,6 +10,7 @@ public class DBProcess {
     final static Logger logger = LoggerFactory.getLogger(DBProcess.class);
     private static final String SAVE_CUSTOMER_DATA = "INSERT INTO customer (customer_id, name, address, salary) VALUES (?, ?, ?, ?)";
     private static final String UPDATE_CUSTOMER_DATA = "UPDATE customer SET name=?, address=?, salary=? WHERE customer_id=?";
+    private static final String DELETE_CUSTOMER_DATA = "DELETE FROM customer WHERE customer_id=?";
 
     public void saveNewCustomer(CustomerDTO customer, Connection connection) {
         logger.info("Start saveNewCustomer method.");
@@ -43,6 +44,21 @@ public class DBProcess {
                 logger.info("Customer updated.");
             } else {
                 logger.error("Failed to update the Customer.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void deleteCustomer(CustomerDTO customer, Connection connection) {
+        try {
+            var ps = connection.prepareStatement(DELETE_CUSTOMER_DATA);
+            ps.setString(1, customer.getCustomer_id());
+
+            if (ps.executeUpdate() != 0) {
+                logger.info("Customer deleted.");
+            } else {
+                logger.error("Failed to delete the Customer.");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
