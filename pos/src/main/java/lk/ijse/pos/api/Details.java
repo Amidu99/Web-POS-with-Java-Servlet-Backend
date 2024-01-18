@@ -1,5 +1,9 @@
 package lk.ijse.pos.api;
 
+import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonWriter;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import lk.ijse.pos.db.DBProcess;
@@ -14,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -63,6 +68,43 @@ public class Details extends HttpServlet {
         } else {
             var dbProcess = new DBProcess();
             dbProcess.deleteOrderDetails(order_id, connection);
+        }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        logger.info("Start Details Servlet doGet method.");
+        String order_id = req.getParameter("order_id");
+
+        if (order_id == null || order_id.isEmpty()) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing or empty 'order_id' parameter");
+        } else {
+            System.out.println("Start doGet all order details method..");
+            var dbProcess = new DBProcess();
+            List<OrderdetailsDTO> orderdetailsDTOList = dbProcess.getAllOrderDetails(order_id, connection);
+
+            if (orderdetailsDTOList != null && !orderdetailsDTOList.isEmpty()) {
+                // Create a JSON array for all items
+                JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+                for (OrderdetailsDTO dto : orderdetailsDTOList) {
+                    JsonObject jsonObject = Json.createObjectBuilder()
+                            .add("order_id", dto.getOrder_id())
+                            .add("item_code", dto.getItem_code())
+                            .add("description", dto.getDescription())
+                            .add("unit_price", dto.getUnit_price())
+                            .add("get_qty", dto.getGet_qty())
+                            .build();
+                    jsonArrayBuilder.add(jsonObject);
+                }
+                // Convert the JSON array to a string
+                StringWriter stringWriter = new StringWriter();
+                try (JsonWriter jsonWriter = Json.createWriter(stringWriter)) {
+                    jsonWriter.writeArray(jsonArrayBuilder.build());
+                }
+                // Write the JSON string to the response
+                var writer = resp.getWriter();
+                writer.println(stringWriter.toString());
+            }
         }
     }
 }
