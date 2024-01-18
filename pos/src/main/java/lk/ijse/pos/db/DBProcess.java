@@ -1,6 +1,7 @@
 package lk.ijse.pos.db;
 
 import lk.ijse.pos.dto.CustomerDTO;
+import lk.ijse.pos.dto.ItemDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.sql.Connection;
@@ -17,6 +18,7 @@ public class DBProcess {
     private static final String GET_CUSTOMER_DATA = "SELECT name, address, salary FROM customer WHERE customer_id=?";
     private static final String GET_LAST_CUSTOMER_ID = "SELECT customer_id FROM customer ORDER BY customer_id DESC LIMIT 1";
     private static final String GET_SEARCH_CUSTOMER_DATA = "SELECT * FROM customer WHERE customer_id LIKE ? OR name LIKE ? OR address LIKE ?";
+    private static final String SAVE_ITEM_DATA = "INSERT INTO item (item_code, description, unit_price, qty_on_hand) VALUES (?, ?, ?, ?)";
 
     public void saveNewCustomer(CustomerDTO customer, Connection connection) {
         logger.info("Start saveNewCustomer method.");
@@ -158,5 +160,24 @@ public class DBProcess {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void saveNewItem(ItemDTO item, Connection connection) {
+        logger.info("Start saveNewItem method.");
+        try {
+            var ps = connection.prepareStatement(SAVE_ITEM_DATA);
+            ps.setString(1, item.getItem_code());
+            ps.setString(2, item.getDescription());
+            ps.setDouble(3, item.getUnit_price());
+            ps.setInt(4, item.getQty_on_hand());
+
+            if (ps.executeUpdate() != 0) {
+                logger.info("Item saved.");
+            } else {
+                logger.error("Failed to save the Item.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
