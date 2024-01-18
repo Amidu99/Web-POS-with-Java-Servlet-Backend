@@ -28,6 +28,7 @@ public class DBProcess {
     private static final String GET_SEARCH_ITEM_DATA = "SELECT * FROM item WHERE item_code LIKE ? OR description LIKE ?";
     private static final String SAVE_ORDER_DATA = "INSERT INTO orderinfo (order_id, date, customer_id, discount, total) VALUES (?, ?, ?, ?, ?)";
     private static final String UPDATE_ORDER_DATA = "UPDATE orderinfo SET date=?, customer_id=?, discount=?, total=? WHERE order_id=?";
+    private static final String DELETE_ORDER_DATA = "DELETE FROM orderinfo WHERE order_id=?";
 
     public void saveNewCustomer(CustomerDTO customer, Connection connection) {
         logger.info("Start saveNewCustomer method.");
@@ -346,6 +347,22 @@ public class DBProcess {
                 logger.info("Order updated.");
             } else {
                 logger.error("Failed to update the Order.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void deleteOrder(OrderinfoDTO orderinfoDTO, Connection connection) {
+        logger.info("Start deleteOrder method.");
+        try {
+            var ps = connection.prepareStatement(DELETE_ORDER_DATA);
+            ps.setString(1, orderinfoDTO.getOrder_id());
+
+            if (ps.executeUpdate() != 0) {
+                logger.info("Order deleted.");
+            } else {
+                logger.error("Failed to delete the order.");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
