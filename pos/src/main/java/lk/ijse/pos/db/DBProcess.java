@@ -36,6 +36,7 @@ public class DBProcess {
     private static final String GET_LAST_ORDER_ID = "SELECT order_id FROM orderinfo ORDER BY order_id DESC LIMIT 1";
     private static final String GET_SEARCH_ORDERS_DATA = "SELECT * FROM orderinfo WHERE order_id LIKE ? OR customer_id LIKE ?";
     private static final String SAVE_ORDERDETAILS_DATA = "INSERT INTO orderdetails (order_id, item_code, description, unit_price, get_qty) VALUES (?, ?, ?, ?, ?)";
+    private static final String DELETE_ORDERDETAILS_DATA = "DELETE FROM orderdetails WHERE order_id=?";
 
     public void saveNewCustomer(CustomerDTO customer, Connection connection) {
         logger.info("Start saveNewCustomer method.");
@@ -488,5 +489,19 @@ public class DBProcess {
         }
     }
 
+    public void deleteOrderDetails(String order_id, Connection connection) {
+        logger.info("Start deleteOrderDetails method.");
+        try {
+            var ps = connection.prepareStatement(DELETE_ORDERDETAILS_DATA);
+            ps.setString(1, order_id);
 
+            if (ps.executeUpdate() != 0) {
+                logger.info("OrderDetails deleted.");
+            } else {
+                logger.error("Failed to delete the OrderDetails.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
