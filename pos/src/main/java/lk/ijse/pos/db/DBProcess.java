@@ -6,6 +6,7 @@ import lk.ijse.pos.dto.OrderinfoDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,10 @@ public class DBProcess {
     private static final String SAVE_ORDER_DATA = "INSERT INTO orderinfo (order_id, date, customer_id, discount, total) VALUES (?, ?, ?, ?, ?)";
     private static final String UPDATE_ORDER_DATA = "UPDATE orderinfo SET date=?, customer_id=?, discount=?, total=? WHERE order_id=?";
     private static final String DELETE_ORDER_DATA = "DELETE FROM orderinfo WHERE order_id=?";
+    private static final String GET_ALL_ORDER_DATA = "SELECT * FROM orderinfo ORDER BY order_id";
+    private static final String GET_ORDER_DATA = "SELECT date, customer_id, discount, total FROM orderinfo WHERE order_id=?";
+    private static final String GET_LAST_ORDER_ID = "SELECT order_id FROM orderinfo ORDER BY order_id DESC LIMIT 1";
+    private static final String GET_SEARCH_ORDERS_DATA = "SELECT * FROM orderinfo WHERE order_id LIKE ? OR customer_id LIKE ?";
 
     public void saveNewCustomer(CustomerDTO customer, Connection connection) {
         logger.info("Start saveNewCustomer method.");
@@ -367,5 +372,95 @@ public class DBProcess {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<OrderinfoDTO> getAllOrders(Connection connection) {
+        logger.info("Start getAllOrders method.");
+        try {
+            var ps = connection.prepareStatement(GET_ALL_ORDER_DATA);
+            var resultSet = ps.executeQuery();
+            List<OrderinfoDTO> orderinfoDTOList = new ArrayList<>();
+            while (resultSet.next()) {
+                String order_id = resultSet.getString(1);
+                Date date = resultSet.getDate(2);
+                String customer_id = resultSet.getString(3);
+                double discount = resultSet.getDouble(4);
+                double total = resultSet.getDouble(5);
+                logger.info("order_id = " + order_id + " date = " + date + " customer_id = " + customer_id + " discount = " + discount + " total = " + total);
+                System.out.println("order_id = " + order_id + " date = " + date + " customer_id = " + customer_id + " discount = " + discount + " total = " + total);
+                OrderinfoDTO orderinfoDTO = new OrderinfoDTO(order_id, date, customer_id, discount, total);
+                orderinfoDTOList.add(orderinfoDTO);
+            }
+            return orderinfoDTOList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public OrderinfoDTO getOrder(String order_id, Connection connection) {
+        logger.info("Start getOrder method.");
+        try {
+            var ps = connection.prepareStatement(GET_ORDER_DATA);
+            ps.setString(1, order_id);
+            var resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                Date date = resultSet.getDate(1);
+                String customer_id = resultSet.getString(2);
+                double discount = resultSet.getDouble(3);
+                double total = resultSet.getDouble(4);
+                logger.info("order_id = " + order_id + " date = " + date + " customer_id = " + customer_id + " discount = " + discount + " total = " + total);
+                System.out.println("order_id = " + order_id + " date = " + date + " customer_id = " + customer_id + " discount = " + discount + " total = " + total);
+                return new OrderinfoDTO(order_id, date, customer_id, discount, total);
+            } else {
+                logger.error("Can't find order!");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getNextOrderID(Connection connection) {
+        logger.info("Start getNextOrderID method.");
+        try {
+            var ps = connection.prepareStatement(GET_LAST_ORDER_ID);
+            var resultSet = ps.executeQuery();
+            if(resultSet.next()){
+                String last_id = resultSet.getString(1);
+                int next_id = Integer.parseInt(last_id.replace("O-", "")) + 1;
+                return String.format("O-%04d", next_id);
+            }
+            return "O-0001";
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<OrderinfoDTO> getSearchOrders(String search_term, Connection connection) {
+        logger.info("Start getSearchOrders method.");
+        try {
+            var ps = connection.prepareStatement(GET_SEARCH_ORDERS_DATA);
+            ps.setString(1, "%" + search_term + "%");
+            ps.setString(2, "%" + search_term + "%");
+            var resultSet = ps.executeQuery();
+            List<OrderinfoDTO> orderinfoDTOList = new ArrayList<>();
+            while (resultSet.next()) {
+                String order_id = resultSet.getString(1);
+                Date date = resultSet.getDate(2);
+                String customer_id = resultSet.getString(3);
+                double discount = resultSet.getDouble(4);
+                double total = resultSet.getDouble(5);
+                logger.info("order_id = " + order_id + " date = " + date + " customer_id = " + customer_id + " discount = " + discount + " total = " + total);
+                System.out.println("order_id = " + order_id + " date = " + date + " customer_id = " + customer_id + " discount = " + discount + " total = " + total);
+                OrderinfoDTO orderinfoDTO = new OrderinfoDTO(order_id, date, customer_id, discount, total);
+                orderinfoDTOList.add(orderinfoDTO);
+            }
+            return orderinfoDTOList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
