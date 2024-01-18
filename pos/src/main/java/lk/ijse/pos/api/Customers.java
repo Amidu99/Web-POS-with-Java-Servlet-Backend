@@ -46,4 +46,18 @@ public class Customers extends HttpServlet {
             dbProcess.saveNewCustomer(customerDTO,connection);
         }
     }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        if(req.getContentType() == null ||
+            !req.getContentType().toLowerCase().startsWith("application/json")){
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        }else{
+            logger.info("Start Customer Servlet doPut method.");
+            Jsonb jsonb = JsonbBuilder.create();
+            var customerDTO = jsonb.fromJson(req.getReader(), CustomerDTO.class);
+            var dbProcess = new DBProcess();
+            dbProcess.updateCustomer(customerDTO,connection);
+        }
+    }
 }
