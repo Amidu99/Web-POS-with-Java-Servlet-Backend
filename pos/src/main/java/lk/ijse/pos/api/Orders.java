@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -58,6 +59,20 @@ public class Orders extends HttpServlet {
             var orderinfoDTO = jsonb.fromJson(req.getReader(), OrderinfoDTO.class);
             var dbProcess = new DBProcess();
             dbProcess.updateOrder(orderinfoDTO, connection);
+        }
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if(req.getContentType() == null ||
+            !req.getContentType().toLowerCase().startsWith("application/json")){
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        }else{
+            logger.info("Start Order Servlet doDelete method.");
+            Jsonb jsonb = JsonbBuilder.create();
+            var orderinfoDTO = jsonb.fromJson(req.getReader(), OrderinfoDTO.class);
+            var dbProcess = new DBProcess();
+            dbProcess.deleteOrder(orderinfoDTO, connection);
         }
     }
 }
