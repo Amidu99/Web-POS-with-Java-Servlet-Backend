@@ -37,6 +37,7 @@ public class DBProcess {
     private static final String GET_SEARCH_ORDERS_DATA = "SELECT * FROM orderinfo WHERE order_id LIKE ? OR customer_id LIKE ?";
     private static final String SAVE_ORDERDETAILS_DATA = "INSERT INTO orderdetails (order_id, item_code, description, unit_price, get_qty) VALUES (?, ?, ?, ?, ?)";
     private static final String DELETE_ORDERDETAILS_DATA = "DELETE FROM orderdetails WHERE order_id=?";
+    private static final String GET_ALL_ORDERDETAILS_DATA = "SELECT * FROM orderdetails WHERE order_id=?";
 
     public void saveNewCustomer(CustomerDTO customer, Connection connection) {
         logger.info("Start saveNewCustomer method.");
@@ -503,5 +504,30 @@ public class DBProcess {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<OrderdetailsDTO> getAllOrderDetails(String order_id, Connection connection) {
+        logger.info("Start getAllOrderDetails method.");
+        System.out.println("order_id : "+order_id);
+        try {
+            var ps = connection.prepareStatement(GET_ALL_ORDERDETAILS_DATA);
+            ps.setString(1, order_id);
+            var resultSet = ps.executeQuery();
+            List<OrderdetailsDTO> orderdetailsDTOList = new ArrayList<>();
+            while (resultSet.next()) {
+                String item_code = resultSet.getString(2);
+                String description = resultSet.getString(3);
+                double unit_price = resultSet.getDouble(4);
+                int get_qty = resultSet.getInt(5);
+                logger.info("order_id = " + order_id + "item_code = " + item_code + " description = " + description + " unit_price = " + unit_price + " get_qty = " + get_qty);
+                System.out.println("order_id = " + order_id + "item_code = " + item_code + " description = " + description + " unit_price = " + unit_price + " get_qty = " + get_qty);
+                OrderdetailsDTO orderdetailsDTO = new OrderdetailsDTO(order_id, item_code, description, unit_price, get_qty);
+                orderdetailsDTOList.add(orderdetailsDTO);
+            }
+            return orderdetailsDTOList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
