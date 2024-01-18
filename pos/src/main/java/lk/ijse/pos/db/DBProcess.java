@@ -27,6 +27,7 @@ public class DBProcess {
     private static final String GET_LAST_ITEM_CODE = "SELECT item_code FROM item ORDER BY item_code DESC LIMIT 1";
     private static final String GET_SEARCH_ITEM_DATA = "SELECT * FROM item WHERE item_code LIKE ? OR description LIKE ?";
     private static final String SAVE_ORDER_DATA = "INSERT INTO orderinfo (order_id, date, customer_id, discount, total) VALUES (?, ?, ?, ?, ?)";
+    private static final String UPDATE_ORDER_DATA = "UPDATE orderinfo SET date=?, customer_id=?, discount=?, total=? WHERE order_id=?";
 
     public void saveNewCustomer(CustomerDTO customer, Connection connection) {
         logger.info("Start saveNewCustomer method.");
@@ -325,6 +326,26 @@ public class DBProcess {
                 logger.info("Order saved.");
             } else {
                 logger.error("Failed to save the Order.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateOrder(OrderinfoDTO orderinfo, Connection connection) {
+        logger.info("Start updateOrder method.");
+        try {
+            var ps = connection.prepareStatement(UPDATE_ORDER_DATA);
+            ps.setDate(1, orderinfo.getDate());
+            ps.setString(2, orderinfo.getCustomer_id());
+            ps.setDouble(3, orderinfo.getDiscount());
+            ps.setDouble(4, orderinfo.getTotal());
+            ps.setString(5, orderinfo.getOrder_id());
+
+            if (ps.executeUpdate() != 0) {
+                logger.info("Order updated.");
+            } else {
+                logger.error("Failed to update the Order.");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
