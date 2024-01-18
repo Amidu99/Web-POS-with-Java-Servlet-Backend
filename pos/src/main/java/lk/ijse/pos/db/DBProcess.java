@@ -21,6 +21,10 @@ public class DBProcess {
     private static final String SAVE_ITEM_DATA = "INSERT INTO item (item_code, description, unit_price, qty_on_hand) VALUES (?, ?, ?, ?)";
     private static final String UPDATE_ITEM_DATA = "UPDATE item SET description=?, unit_price=?, qty_on_hand=? WHERE item_code=?";
     private static final String DELETE_ITEM_DATA = "DELETE FROM item WHERE item_code=?";
+    private static final String GET_ALL_ITEM_DATA = "SELECT * FROM item ORDER BY item_code";
+    private static final String GET_ITEM_DATA = "SELECT description, unit_price, qty_on_hand FROM item WHERE item_code=?";
+    private static final String GET_LAST_ITEM_CODE = "SELECT item_code FROM item ORDER BY item_code DESC LIMIT 1";
+    private static final String GET_SEARCH_ITEM_DATA = "SELECT * FROM item WHERE item_code LIKE ? OR description LIKE ?";
 
     public void saveNewCustomer(CustomerDTO customer, Connection connection) {
         logger.info("Start saveNewCustomer method.");
@@ -216,5 +220,92 @@ public class DBProcess {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<ItemDTO> getAllItems(Connection connection) {
+        logger.info("Start getAllItems method.");
+        try {
+            var ps = connection.prepareStatement(GET_ALL_ITEM_DATA);
+            var resultSet = ps.executeQuery();
+            List<ItemDTO> itemDTOList = new ArrayList<>();
+            while (resultSet.next()) {
+                String item_code = resultSet.getString(1);
+                String description = resultSet.getString(2);
+                double unit_price = resultSet.getDouble(3);
+                int qty_on_hand = resultSet.getInt(4);
+                logger.info("item_code = " + item_code + " description = " + description + " unit_price = " + unit_price + " qty_on_hand = " + qty_on_hand);
+                System.out.println("item_code = " + item_code + " description = " + description + " unit_price = " + unit_price + " qty_on_hand = " + qty_on_hand);
+                ItemDTO itemDTO = new ItemDTO(item_code, description, unit_price, qty_on_hand);
+                itemDTOList.add(itemDTO);
+            }
+            return itemDTOList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ItemDTO getItem(String item_code, Connection connection) {
+        logger.info("Start getItem method.");
+        try {
+            var ps = connection.prepareStatement(GET_ITEM_DATA);
+            ps.setString(1, item_code);
+            var resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                String description = resultSet.getString(1);
+                double unit_price = resultSet.getDouble(2);
+                int qty_on_hand = resultSet.getInt(3);
+                logger.info("item_code = " + item_code + " description = " + description + " unit_price = " + unit_price + " qty_on_hand = " + qty_on_hand);
+                System.out.println("item_code = " + item_code + " description = " + description + " unit_price = " + unit_price + " qty_on_hand = " + qty_on_hand);
+                return new ItemDTO(item_code, description, unit_price, qty_on_hand);
+            } else {
+                logger.error("Can't find item!");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getNextItemCode(Connection connection) {
+        logger.info("Start getNextItemCode method.");
+        try {
+            var ps = connection.prepareStatement(GET_LAST_ITEM_CODE);
+            var resultSet = ps.executeQuery();
+            if(resultSet.next()){
+                String last_code = resultSet.getString(1);
+                int next_code = Integer.parseInt(last_code.replace("I-", "")) + 1;
+                return String.format("I-%04d", next_code);
+            }
+            return "I-0001";
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<ItemDTO> getSearchItems(String search_term, Connection connection) {
+        logger.info("Start getSearchItems method.");
+        try {
+            var ps = connection.prepareStatement(GET_SEARCH_ITEM_DATA);
+            ps.setString(1, "%" + search_term + "%");
+            ps.setString(2, "%" + search_term + "%");
+            var resultSet = ps.executeQuery();
+            List<ItemDTO> itemDTOList = new ArrayList<>();
+            while (resultSet.next()) {
+                String item_code = resultSet.getString(1);
+                String description = resultSet.getString(2);
+                double unit_price = resultSet.getDouble(3);
+                int qty_on_hand = resultSet.getInt(4);
+                logger.info("item_code = " + item_code + " description = " + description + " unit_price = " + unit_price + " qty_on_hand = " + qty_on_hand);
+                System.out.println("item_code = " + item_code + " description = " + description + " unit_price = " + unit_price + " qty_on_hand = " + qty_on_hand);
+                ItemDTO itemDTO = new ItemDTO(item_code, description, unit_price, qty_on_hand);
+                itemDTOList.add(itemDTO);
+            }
+            return itemDTOList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
