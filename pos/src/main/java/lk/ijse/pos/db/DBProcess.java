@@ -19,6 +19,7 @@ public class DBProcess {
     private static final String GET_LAST_CUSTOMER_ID = "SELECT customer_id FROM customer ORDER BY customer_id DESC LIMIT 1";
     private static final String GET_SEARCH_CUSTOMER_DATA = "SELECT * FROM customer WHERE customer_id LIKE ? OR name LIKE ? OR address LIKE ?";
     private static final String SAVE_ITEM_DATA = "INSERT INTO item (item_code, description, unit_price, qty_on_hand) VALUES (?, ?, ?, ?)";
+    private static final String UPDATE_ITEM_DATA = "UPDATE item SET description=?, unit_price=?, qty_on_hand=? WHERE item_code=?";
 
     public void saveNewCustomer(CustomerDTO customer, Connection connection) {
         logger.info("Start saveNewCustomer method.");
@@ -175,6 +176,25 @@ public class DBProcess {
                 logger.info("Item saved.");
             } else {
                 logger.error("Failed to save the Item.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateItem(ItemDTO item, Connection connection) {
+        logger.info("Start updateItem method.");
+        try {
+            var ps = connection.prepareStatement(UPDATE_ITEM_DATA);
+            ps.setString(1, item.getDescription());
+            ps.setDouble(2, item.getUnit_price());
+            ps.setInt(3, item.getQty_on_hand());
+            ps.setString(4, item.getItem_code());
+
+            if (ps.executeUpdate() != 0) {
+                logger.info("Item updated.");
+            } else {
+                logger.error("Failed to update the item.");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
