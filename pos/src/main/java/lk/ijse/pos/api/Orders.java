@@ -46,4 +46,18 @@ public class Orders extends HttpServlet {
             dbProcess.saveNewOrder(orderinfoDTO,connection);
         }
     }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        if(req.getContentType() == null ||
+            !req.getContentType().toLowerCase().startsWith("application/json")){
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        }else{
+            logger.info("Start Order Servlet doPut method.");
+            Jsonb jsonb = JsonbBuilder.create();
+            var orderinfoDTO = jsonb.fromJson(req.getReader(), OrderinfoDTO.class);
+            var dbProcess = new DBProcess();
+            dbProcess.updateOrder(orderinfoDTO, connection);
+        }
+    }
 }
