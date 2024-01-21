@@ -1,0 +1,54 @@
+-- Create 'webpos' database
+CREATE DATABASE IF NOT EXISTS webpos;
+
+-- Use 'webpos' database
+USE webpos;
+
+-- Create 'customer' table
+CREATE TABLE customer (
+    customer_id VARCHAR(50) NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    address VARCHAR(50) NOT NULL,
+    salary DOUBLE NOT NULL,
+    CONSTRAINT customer_customer_id_uindex UNIQUE (customer_id),
+    PRIMARY KEY (customer_id)
+);
+
+-- Create 'item' table
+CREATE TABLE item (
+    item_code VARCHAR(50) NOT NULL,
+    description VARCHAR(50) NOT NULL,
+    unit_price DOUBLE NOT NULL,
+    qty_on_hand INT NOT NULL,
+    CONSTRAINT item_item_code_uindex UNIQUE (item_code),
+    PRIMARY KEY (item_code)
+);
+
+-- Create 'orderinfo' table
+CREATE TABLE orderinfo (
+    order_id VARCHAR(50) NOT NULL,
+    date DATE NOT NULL,
+    customer_id VARCHAR(50) NOT NULL,
+    discount DOUBLE NOT NULL,
+    total DOUBLE NOT NULL,
+    CONSTRAINT orderinfo_order_id_uindex UNIQUE (order_id),
+    CONSTRAINT customer_id FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    PRIMARY KEY (order_id)
+);
+
+-- Create 'orderdetails' table
+CREATE TABLE orderdetails (
+    order_id VARCHAR(50) NOT NULL,
+    item_code VARCHAR(50) NOT NULL,
+    description VARCHAR(50) NOT NULL,
+    unit_price DOUBLE NOT NULL,
+    get_qty INT NOT NULL,
+    CONSTRAINT orderdetails_item__fk FOREIGN KEY (item_code) REFERENCES item(item_code) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT orderdetails_orderinfo__fk FOREIGN KEY (order_id) REFERENCES orderinfo(order_id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+-- Describe tables
+DESC customer;
+DESC item;
+DESC orderinfo;
+DESC orderdetails;
